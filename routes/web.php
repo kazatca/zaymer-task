@@ -17,12 +17,26 @@ use Illuminate\Http\Request;
 
 Route::get('/', function () {
   $users = User::all();
+
   $transfers = Transfer::all();
 
+  $transfers = DB::table('transfers')
+    ->select('user_from.name as from', 'user_to.name as to', 'transfers.volume')
+    ->join('users as user_from', 'user_from.id', '=', 'transfers.from')
+    ->join('users as user_to', 'user_to.id', '=', 'transfers.to')
+    ->get();
+
+  $users = array_map(function($user){
+    return [
+      'id'    => $user->id,
+      'value' => $user->name
+    ];
+  }, iterator_to_array($users) );
+
   return view('transfers',[
-      'users' => $users,
-      'transfers' => $transfers
-    ]);
+    'users' => $users,
+    'transfers' => $transfers
+  ]);
 });
 
 
@@ -39,6 +53,8 @@ Route::post('/user', function(Request $request){
   $validator = Validator::make($request->all(), [
     'name' => 'required|max:255',
     'balance' => 'numeric'
+  ], [
+    'required' => 'Поле не может быть пустым'
   ]);
   
   if ($validator->fails()) {
@@ -49,7 +65,7 @@ Route::post('/user', function(Request $request){
 
   $user = new User;
   $user->name = $request->name;
-  $user->balance = $request->balance;
+  $user->setBalance($request->balance);
   $user->save();
 
   return redirect('/users');
@@ -59,7 +75,7 @@ Route::post('/transfer', function(Request $request){
   $validator = Validator::make($request->all(), [
     'from' => 'required',
     'to' => 'required',
-    'volume' => 'min:0'
+    'volume' => 'required|min:0.01'
   ]);
 
   if ($validator->fails()) {

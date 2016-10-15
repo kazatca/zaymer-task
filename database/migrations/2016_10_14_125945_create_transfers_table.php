@@ -15,8 +15,8 @@ class CreateTransfersTable extends Migration
     {
         Schema::create('transfers', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('from');
-            $table->string('to');
+            $table->integer('from');
+            $table->integer('to');
             $table->decimal('volume', 10, 2);
             $table->timestamps();
         });
