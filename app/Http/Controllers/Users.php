@@ -32,6 +32,12 @@ class Users extends Controller{
 
   public function show(){
     $users = User::all();
+
+
+    /*
+    select tmp.id, sum(tmp.volume) from (select u.id id, case when t.from=u.id then -t.volume else t.volume end as volume from users u join transfers t on t.from = u.id or t.to=u.id union select u.id id, u.balance as volume from users u) tmp group by 1;
+    
+     */
     
     return view('users', [
       'users' => $users
