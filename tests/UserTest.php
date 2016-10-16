@@ -7,26 +7,23 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class UserTest extends TestCase{
 
   use DatabaseMigrations;
-  /**
-   * A basic test example.
-   *
-   * @return void
-   */
+
   public function testNameAndBalance(){
+
     $this->visit('/users')
-      ->type('Alice', 'name')
-      ->type('10', 'balance')
-      ->press('submit')
-      ->see('Alice')
-      ->see('10.00');
+      ->type('Alice', 'name')  //вводим имя
+      ->type(10, 'balance')    //вводим баланс
+      ->press('submit')        //отправляем форму
+      ->see('Alice')           //на странице должны встретиться новое имя 
+      ->see('10.00');          //и баланс
   }
 
   public function testNameOnly(){
     $this->visit('/users')
-      ->type('Alice', 'name')
+      ->type('Alice', 'name') //вводим только имя
       ->press('submit')
       ->see('Alice')
-      ->see('0.00');
+      ->see('0.00');          //на странице должен быть баланс по-умолчанию
 
   }
 }
