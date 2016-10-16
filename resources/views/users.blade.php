@@ -6,7 +6,7 @@
 
   <div class="well">
     <h2>Новый пользователь</h2>
-    @include('user-form')
+    @include('users-form')
   </div>
   
 

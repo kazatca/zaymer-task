@@ -17,13 +17,15 @@ class Users extends Controller{
     
     if ($validator->fails()) {
       return redirect('/users')
-        ->withInput()
+        // ->withInput()
         ->withErrors($validator);
     }
 
     $user = new User;
     $user->name = $request->name;
-    $user->setBalance($request->balance);
+    if($request->balance){
+      $user->balance = $request->balance;
+    }
     $user->save();
 
     return redirect('/users');
