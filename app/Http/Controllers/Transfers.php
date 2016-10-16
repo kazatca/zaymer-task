@@ -36,9 +36,9 @@ class Transfers extends Controller{
 
   public function add(Request $request){
     $validator = \Validator::make($request->all(), [
-      'from' => 'required',
+      'from' => 'required|different:to',
       'to' => 'required',
-      'volume' => 'required|min:0.01'
+      'volume' => 'required|numeric|min:0.01'
     ]);
 
     if ($validator->fails()) {
